@@ -32,7 +32,6 @@ class FolioReaderAddHighlightNote: UIViewController {
     init(initWithHighlight highlight: Highlight) {
         super.init(nibName: nil, bundle: Bundle.frameworkBundle())
         self.highlight = highlight
-//        self.quoteText = shareText.stripLineBreaks().stripHtml()
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -405,6 +405,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
 			let toInject = "\n\(cssTag)\n\(jsTag)\n</head>"
 			html = html.replacingOccurrences(of: "</head>", with: toInject)
+            html = html.replacingOccurrences(of: "</p>", with: "<br><br>")
+            html = html.replacingOccurrences(of: "<p>", with: "")
 
 			// Font class name
 			var classes = FolioReader.currentFont.cssIdentifier

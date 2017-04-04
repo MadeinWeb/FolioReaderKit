@@ -121,6 +121,8 @@ open class FolioReaderWebView: UIWebView {
             if let highlight = Highlight.matchHighlight(html, andId: dic["id"]!, startOffset: startOffset, endOffset: endOffset, noteForHighlight: nil) {
 				highlight.persist()
 			}
+//             setMenuVisible(false)
+            
 		} catch {
 			print("Could not receive JSON")
 		}
@@ -129,7 +131,7 @@ open class FolioReaderWebView: UIWebView {
     
     func highlightWithNote(_ sender: UIMenuController?) {
         
-        let highlightAndReturn = js("highlightStringWithNote('\(HighlightStyle.classForStyle(FolioReader.currentHighlightStyle))')")
+        let highlightAndReturn = js("highlightStringWithNote('\(HighlightStyle.classForStyle(HighlightStyle.underline.rawValue))')")
         let jsonData = highlightAndReturn?.data(using: String.Encoding.utf8)
         
         do {
@@ -151,6 +153,8 @@ open class FolioReaderWebView: UIWebView {
                 
                 FolioReader.shared.readerCenter?.presentAddHighlightNote(highlight, edit: false)
             }
+            
+//             setMenuVisible(false)
         } catch {
             print("Could not receive JSON")
         }
@@ -268,21 +272,27 @@ open class FolioReaderWebView: UIWebView {
         
         // menu on existing highlight
         if isShare {
-            menuItems = [colorsItem, removeItem]
             
             if haveNote {
-                menuItems.insert(editNoteItem, at: 1)
+                
+                menuItems = [removeItem]
+                menuItems.insert(editNoteItem, at: 0)
+            }
+            else
+            {
+                menuItems = [colorsItem, removeItem]
             }
             
             if readerConfig.allowSharing {
+            
                 menuItems.append(shareItem)
             }
-            
+        
             isShare = false
             
         } else if isColors {
             // menu for selecting highlight color
-            menuItems = [yellowItem, greenItem, blueItem, pinkItem, underlineItem]
+            menuItems = [yellowItem, greenItem, blueItem, pinkItem]
         } else {
             // default menu
             menuItems = [highlightItem, defineItem, highlightNoteItem, shareItem]
