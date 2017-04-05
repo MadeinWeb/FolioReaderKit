@@ -141,6 +141,7 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
 				if range.location != NSNotFound {
 					let newRange = NSRange(location: range.location + item.contentPre.characters.count, length: item.content.characters.count)
 					tempHtmlContent = tempHtmlContent.replacingCharacters(in: newRange, with: tag) as NSString
+                    
 				}
 				else {
 					print("highlight range not found")

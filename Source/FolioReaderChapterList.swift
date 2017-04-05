@@ -74,7 +74,28 @@ class FolioReaderChapterList: UITableViewController {
         if let currentPageNumber = currentPageNumber, let reference = book.spine.spineReferences[safe: currentPageNumber-1] , tocReference.resource != nil {
             let resource = reference.resource
             cell.indexLabel.textColor = tocReference.resource == resource ? readerConfig.tintColor : readerConfig.menuTextColor
+            
+        
+            
+            
+//            let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+//            let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
+//            let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
+//            
+//            if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPageNumber as NSNumber?){
+//                
+//                cell.indexLabel.text = cell.indexLabel.text! + "gere"
+//                
+//            }
+//            else
+//            {
+//                cell.indexLabel.text = cell.indexLabel.text! + " sem gere"
+//            }
         }
+        
+
+        
+        
         
         cell.layoutMargins = UIEdgeInsets.zero
         cell.preservesSuperviewLayoutMargins = false

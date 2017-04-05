@@ -28,6 +28,17 @@ open class Highlight: Object {
     }
 }
 
+open class Bookmark: Object {
+    
+    open dynamic var id = 0
+    open dynamic var bookId: String!
+    open dynamic var page: Int = 0
+    
+    override open class func primaryKey() -> String? {
+        return "id"
+    }
+}
+
 extension Results {
     func toArray<T>(_ ofType: T.Type) -> [T] {
         return flatMap { $0 as? T }

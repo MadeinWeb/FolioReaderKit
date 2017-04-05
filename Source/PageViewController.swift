@@ -14,6 +14,7 @@ class PageViewController: UIPageViewController {
     var segmentedControlItems = [String]()
     var viewControllerOne: UIViewController!
     var viewControllerTwo: UIViewController!
+    var viewControllerThree: UIViewController!
     var index = FolioReader.defaults.integer(forKey: kCurrentTOCMenu)
     
     // MARK: Init
@@ -39,10 +40,11 @@ class PageViewController: UIPageViewController {
         segmentedControl.setWidth(100, forSegmentAt: 1)
         self.navigationItem.titleView = segmentedControl
         
-        viewList = [viewControllerOne, viewControllerTwo]
+        viewList = [viewControllerOne, viewControllerTwo ]
         
         viewControllerOne.didMove(toParentViewController: self)
         viewControllerTwo.didMove(toParentViewController: self)
+//        viewControllerThree.didMove(toParentViewController: self)
         
         self.delegate = self
         self.dataSource = self

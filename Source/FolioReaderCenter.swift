@@ -216,8 +216,10 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     func configureNavBarButtons() {
 
         // Navbar buttons
-        let shareIcon = UIImage(readerImageNamed: "icon-navbar-share")?.ignoreSystemTint()
-        let audioIcon = UIImage(readerImageNamed: "icon-navbar-tts")?.ignoreSystemTint() //man-speech-icon
+        
+        let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+//        let shareIcon = UIImage(readerImageNamed: "icon-navbar-share")?.ignoreSystemTint()
+        let audioIcon = UIImage(readerImageNamed: "icon-navbar-tts-2")?.ignoreSystemTint() //man-speech-icon
         let closeIcon = UIImage(readerImageNamed: "icon-navbar-close")?.ignoreSystemTint()
         let tocIcon = UIImage(readerImageNamed: "icon-navbar-toc")?.ignoreSystemTint()
         let fontIcon = UIImage(readerImageNamed: "icon-navbar-font")?.ignoreSystemTint()
@@ -230,9 +232,11 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         
         var rightBarIcons = [UIBarButtonItem]()
 
-        if readerConfig.allowSharing {
-            rightBarIcons.append(UIBarButtonItem(image: shareIcon, style: .plain, target: self, action:#selector(shareChapter(_:))))
-        }
+        rightBarIcons.append(UIBarButtonItem(image: bookmarkIcon, style: .plain, target: self, action:#selector(bookmark(_:))))
+        
+//        if readerConfig.allowSharing {
+//            rightBarIcons.append(UIBarButtonItem(image: shareIcon, style: .plain, target: self, action:#selector(shareChapter(_:))))
+//        }
 
         if book.hasAudio() || readerConfig.enableTTS {
             rightBarIcons.append(UIBarButtonItem(image: audioIcon, style: .plain, target: self, action:#selector(presentPlayerMenu(_:))))
@@ -243,6 +247,22 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         
         rightBarIcons.append(contentsOf: [font])
         navigationItem.rightBarButtonItems = rightBarIcons
+        
+        
+//        let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+        let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
+        let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
+        
+        if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPage?.pageNumber as NSNumber?){
+            
+            bookmarkMenuIten?.image = bookmarkFullIcon
+            
+        }
+        else
+        {
+            bookmarkMenuIten?.image = bookmarkIcon
+        }
+        
     }
 
     func reloadData() {
@@ -565,6 +585,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         
         nextPageNumber = currentPageNumber+1 <= totalPages ? currentPageNumber+1 : currentPageNumber
         
+        
+        
 //        // Set navigation title
 //        if let chapterName = getCurrentChapterName() {
 //            title = chapterName
@@ -575,6 +597,21 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
             completion?()
             return
         }
+    
+        let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+        let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
+        let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
+        
+        if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPage.pageNumber as NSNumber?){
+            
+            bookmarkMenuIten?.image = bookmarkFullIcon
+            
+        }
+        else
+        {
+            bookmarkMenuIten?.image = bookmarkIcon
+        }
+        
         
         scrollScrubber?.setSliderVal()
         
@@ -791,6 +828,21 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         }
         return nil
     }
+    
+    
+    func getCurrentChapterNameWithPage(_ page : Int) -> String? {
+    
+            for item in book.flatTableOfContents {
+                if let reference = book.spine.spineReferences[safe: page-1], let resource = item.resource
+                    , resource == reference.resource {
+                    if let title = item.title {
+                        return title
+                    }
+                    return nil
+                }
+            }
+        return nil
+    }
 
 	// MARK: Public page methods
 
@@ -817,6 +869,44 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     func audioMark(href: String, fragmentID: String) {
         changePageWith(href: href, andAudioMarkID: fragmentID)
     }
+    
+    
+    func bookmark(_ sender: UIBarButtonItem) {
+        
+        guard let currentPage = currentPage else { return }
+        
+        let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+        let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
+        
+        let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
+        
+        if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPage.pageNumber as NSNumber?){
+            
+            bookmarkMenuIten?.image = bookmarkIcon
+            existsBookmark.remove()
+        }
+        else
+        {
+            let bookmark = Bookmark()
+            
+            bookmark.bookId = (kBookId as NSString).deletingPathExtension
+            bookmark.page = currentPage.pageNumber
+            bookmark.id = currentPage.pageNumber
+            bookmark.persist()
+            bookmarkMenuIten?.image = bookmarkFullIcon
+        }
+    
+//        
+        let allBookmarks = Bookmark.allByBookId((kBookId as NSString).deletingPathExtension)
+//        for item in allBookmarks{
+//            
+//            print(item.bookId)
+//            print(item.page)
+//        }
+//        
+        print(allBookmarks.count)
+    }
+    
 
     // MARK: - Sharing
     
@@ -1046,9 +1136,13 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         chapter.delegate = self
         let highlight = FolioReaderHighlightList()
         
+//        let bookmark = FolioReaderBookmarklist()
+//        bookmark.delegate = self
+        
         let pageController = PageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options:nil)
         pageController.viewControllerOne = chapter
         pageController.viewControllerTwo = highlight
+//        pageController.viewControllerThree = bookmark
         pageController.segmentedControlItems = [readerConfig.localizedContentsTitle, readerConfig.localizedHighlightsTitle]
         
         let nav = UINavigationController(rootViewController: pageController)
@@ -1205,6 +1299,43 @@ extension FolioReaderCenter: FolioReaderChapterListDelegate {
                 currentPage.handleAnchor(reference.fragmentID!, avoidBeginningAnchors: true, animated: true)
             }
             tempReference = nil
+        }
+    }
+}
+
+
+extension FolioReaderCenter: FolioReaderBookmarkListDelegate {
+    
+//    func chapterList(_ chapterList: FolioReaderChapterList, didSelectRowAtIndexPath indexPath: IndexPath, withTocReference reference: FRTocReference) {
+//        let item = findPageByResource(reference)
+//        
+//        if item < totalPages {
+//            let indexPath = IndexPath(row: item, section: 0)
+//            changePageWith(indexPath: indexPath, animated: false, completion: { () -> Void in
+//                self.updateCurrentPage()
+//            })
+//            tempReference = reference
+//        } else {
+//            print("Failed to load book because the requested resource is missing.")
+//        }
+//    }
+//    
+//    func chapterList(didDismissedChapterList chapterList: FolioReaderChapterList) {
+//        updateCurrentPage()
+//        
+//        // Move to #fragment
+//        if let reference = tempReference {
+//            if let fragmentID = reference.fragmentID, let currentPage = currentPage , fragmentID != "" {
+//                currentPage.handleAnchor(reference.fragmentID!, avoidBeginningAnchors: true, animated: true)
+//            }
+//            tempReference = nil
+//        }
+//    }
+    
+    func bookmarkList(_ bookmark: Bookmark, didSelectRowAtIndexPath indexPath: IndexPath) {
+        
+        changePageWith(page: bookmark.page, animated: true) { 
+//            self.updateCurrentPage()
         }
     }
 }
