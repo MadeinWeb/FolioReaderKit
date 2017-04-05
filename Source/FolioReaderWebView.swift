@@ -121,7 +121,6 @@ open class FolioReaderWebView: UIWebView {
             if let highlight = Highlight.matchHighlight(html, andId: dic["id"]!, startOffset: startOffset, endOffset: endOffset, noteForHighlight: nil) {
 				highlight.persist()
 			}
-//             setMenuVisible(false)
             
 		} catch {
 			print("Could not receive JSON")
@@ -153,8 +152,6 @@ open class FolioReaderWebView: UIWebView {
                 
                 FolioReader.shared.readerCenter?.presentAddHighlightNote(highlight, edit: false)
             }
-            
-//             setMenuVisible(false)
         } catch {
             print("Could not receive JSON")
         }

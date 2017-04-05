@@ -15,21 +15,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 //    for (var i=0; i<lnk.length; i++) {
 //        lnk[i].setAttribute("onclick","return callVerseURL(this);");
 //    }
-
-    var ps = document.getElementsByTagName('p');
-
-     while (ps.length) {
-
-         var p = ps[0];
-         while (p.firstChild) {
-             p.parentNode.insertBefore(p.firstChild, p);
-         }
-
-         p.parentNode.insertBefore(document.createElement('br'), p);
-         p.parentNode.insertBefore(document.createElement('br'), p);
-         p.parentNode.removeChild(p);
-   }
-
 });
 
 // Generate a GUID
