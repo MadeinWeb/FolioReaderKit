@@ -239,7 +239,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         let audioIcon = UIImage(readerImageNamed: "icon-navbar-tts-2")?.ignoreSystemTint() //man-speech-icon
         let closeIcon = UIImage(readerImageNamed: "icon-navbar-close")?.ignoreSystemTint()
         let tocIcon = UIImage(readerImageNamed: "icon-navbar-toc")?.ignoreSystemTint()
-        let fontIcon = UIImage(readerImageNamed: "icon-navbar-font")?.ignoreSystemTint()
+        let fontIcon = UIImage(readerImageNamed: "icon-navbar-settings")?.ignoreSystemTint()
         let space = 70 as CGFloat
 
         let menu = UIBarButtonItem(image: closeIcon, style: .plain, target: self, action:#selector(closeReader(_:)))
