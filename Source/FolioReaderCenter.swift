@@ -213,7 +213,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         setTranslucentNavigation(color: navBackground, tintColor: tintColor, titleColor: navText, andFont: font)
         
         
-         let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+        let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
         let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
         let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
         

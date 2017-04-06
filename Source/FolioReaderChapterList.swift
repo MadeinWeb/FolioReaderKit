@@ -77,21 +77,20 @@ class FolioReaderChapterList: UITableViewController {
             let resource = reference.resource
             cell.indexLabel.textColor = tocReference.resource == resource ? readerConfig.tintColor : readerConfig.menuTextColor
             
-            
-            
-            
-//            let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
-//            let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
-//            let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
+
 //            
             if let existsBookmark = Bookmark.bookmarkByChapterName(tocReference.title){
                 
-                cell.indexLabel.text = cell.indexLabel.text! + "  gere"
+                let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
+
+                cell.bookmarkIcon.image = bookmarkFullIcon
+                
                 
             }
             else
             {
-                cell.indexLabel.text = cell.indexLabel.text! + "   sem gere"
+
+                cell.bookmarkIcon.image = nil
             }
         }
         
