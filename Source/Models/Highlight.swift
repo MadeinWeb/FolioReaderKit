@@ -33,6 +33,7 @@ open class Bookmark: Object {
     open dynamic var id = 0
     open dynamic var bookId: String!
     open dynamic var page: Int = 0
+    open dynamic var chapterName: String?
     
     override open class func primaryKey() -> String? {
         return "id"

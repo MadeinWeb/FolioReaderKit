@@ -58,7 +58,9 @@ class FolioReaderChapterList: UITableViewController {
         let tocReference = tocItems[(indexPath as NSIndexPath).row]
         let isSection = tocReference.children.count > 0
         
-        cell.indexLabel.text = tocReference.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let title = tocReference.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        cell.indexLabel.text = title
 
         // Add audio duration for Media Ovelay
         if let resource = tocReference.resource {
@@ -75,22 +77,22 @@ class FolioReaderChapterList: UITableViewController {
             let resource = reference.resource
             cell.indexLabel.textColor = tocReference.resource == resource ? readerConfig.tintColor : readerConfig.menuTextColor
             
-        
+            
             
             
 //            let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
 //            let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
 //            let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
 //            
-//            if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPageNumber as NSNumber?){
-//                
-//                cell.indexLabel.text = cell.indexLabel.text! + "gere"
-//                
-//            }
-//            else
-//            {
-//                cell.indexLabel.text = cell.indexLabel.text! + " sem gere"
-//            }
+            if let existsBookmark = Bookmark.bookmarkByChapterName(tocReference.title){
+                
+                cell.indexLabel.text = cell.indexLabel.text! + "  gere"
+                
+            }
+            else
+            {
+                cell.indexLabel.text = cell.indexLabel.text! + "   sem gere"
+            }
         }
         
 

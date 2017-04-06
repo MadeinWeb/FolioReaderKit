@@ -56,6 +56,21 @@ extension Bookmark {
         return bookmarks!
     }
     
+    public static func bookmarkByChapterName(_ chapterName: String) -> Bookmark? {
+        var bookmarks: [Bookmark]?
+        let predicate = NSPredicate(format: "chapterName = %@", chapterName)
+        let realm = try! Realm(configuration: readerConfig.realmConfiguration)
+        bookmarks = realm.objects(Bookmark.self).filter(predicate).toArray(Bookmark.self)
+
+        if (bookmarks!.count != 0){
+            return bookmarks?[0]
+        }
+        else
+        {
+            return nil
+        }
+    }
+    
     
     public static func bookmarkByBookIdAndPage(_ bookId: String, andPage page: NSNumber? = nil) -> Bookmark? {
         var bookmarks: [Bookmark]?

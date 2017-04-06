@@ -211,6 +211,23 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         let navText = isNight(UIColor.white, UIColor.black)
         let font = UIFont(name: "Avenir-Light", size: 17)!
         setTranslucentNavigation(color: navBackground, tintColor: tintColor, titleColor: navText, andFont: font)
+        
+        
+         let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
+        let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
+        let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
+        
+        let test = getCurrentChapterName()
+        
+        if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPage?.pageNumber as NSNumber?){
+            
+            bookmarkMenuIten?.image = bookmarkFullIcon
+            
+        }
+        else
+        {
+            bookmarkMenuIten?.image = bookmarkIcon
+        }
     }
     
     func configureNavBarButtons() {
@@ -584,34 +601,11 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         }
         
         nextPageNumber = currentPageNumber+1 <= totalPages ? currentPageNumber+1 : currentPageNumber
-        
-        
-        
-//        // Set navigation title
-//        if let chapterName = getCurrentChapterName() {
-//            title = chapterName
-//        } else { title = ""}
-        
         // Set pages
         guard let currentPage = currentPage else {
             completion?()
             return
         }
-    
-        let bookmarkIcon = UIImage(readerImageNamed: "icon-navbar-bookmark")?.ignoreSystemTint()
-        let bookmarkFullIcon = UIImage(readerImageNamed: "icon-navbar-bookmark-full")?.ignoreSystemTint()
-        let bookmarkMenuIten = navigationItem.rightBarButtonItems?[0]
-        
-        if let existsBookmark = Bookmark.bookmarkByBookIdAndPage((kBookId as NSString).deletingPathExtension, andPage: currentPage.pageNumber as NSNumber?){
-            
-            bookmarkMenuIten?.image = bookmarkFullIcon
-            
-        }
-        else
-        {
-            bookmarkMenuIten?.image = bookmarkIcon
-        }
-        
         
         scrollScrubber?.setSliderVal()
         
@@ -892,6 +886,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
             bookmark.bookId = (kBookId as NSString).deletingPathExtension
             bookmark.page = currentPage.pageNumber
             bookmark.id = currentPage.pageNumber
+            bookmark.chapterName = getCurrentChapterName()
             bookmark.persist()
             bookmarkMenuIten?.image = bookmarkFullIcon
         }
